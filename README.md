@@ -1,2 +1,1 @@
-# sunmi-sdk-rki
-SUNMI SDK for RKI demo.
+SUNMI RKI 外调程序 Demo
