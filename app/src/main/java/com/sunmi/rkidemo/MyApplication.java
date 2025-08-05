@@ -11,20 +11,21 @@ import android.util.Log;
 import com.sunmi.keyinject.binder.KeyInjectOpt;
 import com.sunmi.rki.SunmiRKIKernel;
 
-import java.util.Objects;
-
 public class MyApplication extends Application {
 
     private static final String TAG = "MyApplication";
+
     public static Context sContext;
     public static MyApplication app;
+
     public KeyInjectOpt mKeyInjectOpt;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        sContext = getApplicationContext();
         app = this;
+        sContext = getApplicationContext();
+
         mConnectHandler.sendEmptyMessageDelayed(1, 1000);
     }
 
@@ -32,8 +33,10 @@ public class MyApplication extends Application {
         SunmiRKIKernel.getInstance().initRKISDK(this, connectRKISDKCallback);
     }
 
+    private final Looper mainLooper = Looper.getMainLooper();
+
     @SuppressLint("HandlerLeak")
-    private final Handler mConnectHandler = new Handler(Objects.requireNonNull(Looper.myLooper())) {
+    private final Handler mConnectHandler = new Handler(mainLooper) {
 
         @Override
         public void handleMessage(Message msg) {
@@ -51,17 +54,17 @@ public class MyApplication extends Application {
 
         @Override
         public void onConnectRKISDK() {
-
-            mKeyInjectOpt = SunmiRKIKernel.getInstance().mKeyInjectOpt;
             Log.e(TAG, "onConnectRKISDK");
+            mKeyInjectOpt = SunmiRKIKernel.getInstance().mKeyInjectOpt;
         }
 
         @Override
         public void onDisconnectRKISDK() {
-
-            mKeyInjectOpt = null;
             Log.e(TAG, "onDisconnectRKISDK");
+            mKeyInjectOpt = null;
             bindRKISDKService();
         }
+
     };
+
 }
